@@ -259,6 +259,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>客戶資料Model.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\客戶資料VIEW.cs">
+      <DependentUpon>客戶資料Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\客戶銀行資訊.cs">
       <DependentUpon>客戶資料Model.tt</DependentUpon>
     </Compile>
@@ -364,6 +367,7 @@
     <Content Include="Views\客戶聯絡人\Details.cshtml" />
     <Content Include="Views\客戶聯絡人\Edit.cshtml" />
     <Content Include="Views\客戶聯絡人\Index.cshtml" />
+    <Content Include="Views\客戶資料\StaticsCustomerData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

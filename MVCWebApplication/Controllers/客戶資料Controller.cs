@@ -131,6 +131,10 @@ namespace MVCWebApplication.Controllers
             base.Dispose(disposing);
         }
 
-        
+        public ActionResult StaticsCustomerData()
+        {
+            var data = db.客戶資料VIEW.ToList();
+            return View(data);
+        }
     }
 }
