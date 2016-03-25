@@ -17,17 +17,16 @@ namespace MVCWebApplication.Controllers
         // GET: 客戶銀行資訊
         public ActionResult Index(string searchStr)
         {
-            //var 客戶銀行資訊 = db.客戶銀行資訊.Include(客 => 客.客戶資料);
+            var 客戶銀行資訊 = db.客戶銀行資訊.Include(客 => 客.客戶資料);
             //return View(客戶銀行資訊.ToList());
 
-            var data = db.客戶銀行資訊.AsQueryable();
+            //var data = db.客戶銀行資訊.AsQueryable();
 
             if (!String.IsNullOrEmpty(searchStr))
             {
-                data = data.Where(p => p.銀行名稱.Contains(searchStr));
-            }
-            //return View(db.客戶資料.ToList());
-            return View("Index", data);
+                客戶銀行資訊 = 客戶銀行資訊.Where(p => p.銀行名稱.Contains(searchStr));
+            }            
+            return View("Index", 客戶銀行資訊);
         }
 
         // GET: 客戶銀行資訊/Details/5
