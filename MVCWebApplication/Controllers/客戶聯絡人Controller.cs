@@ -22,7 +22,7 @@ namespace MVCWebApplication.Controllers
 
             if (!String.IsNullOrEmpty(searchStr))
             {
-                客戶聯絡人 = 客戶聯絡人.Where(p => p.姓名.Contains(searchStr));
+                客戶聯絡人 = 客戶聯絡人.Where(p => p.姓名.Contains(searchStr));                
             }
             return View("Index", 客戶聯絡人);
         }
