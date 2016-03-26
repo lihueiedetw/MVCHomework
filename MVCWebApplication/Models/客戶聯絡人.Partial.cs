@@ -1,14 +1,26 @@
 namespace MVCWebApplication.Models
 {
+    using Controllers;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    
+
     [MetadataType(typeof(客戶聯絡人MetaData))]
-    public partial class 客戶聯絡人
-    {
+    public partial class 客戶聯絡人 : IValidatableObject
+    {        
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            客戶聯絡人Controller 客戶聯絡人Con = new 客戶聯絡人Controller();
+
+            //驗證Email是否有重複  
+            bool ret = 客戶聯絡人Con.驗證聯絡Email重複(this.Id, this.客戶Id, this.Email);
+            if (ret)  //表示重複
+            {
+                yield return new ValidationResult("同一客戶中，聯絡人Email重複!", new string[] { "Email" });
+            }            
+        }
     }
-    
+
     public partial class 客戶聯絡人MetaData
     {
         [Required]

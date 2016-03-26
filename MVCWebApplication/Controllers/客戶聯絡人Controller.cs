@@ -138,5 +138,27 @@ namespace MVCWebApplication.Controllers
             }
             base.Dispose(disposing);
         }
+
+        public bool 驗證聯絡Email重複(int id, int 客戶Id, string email)
+        {            
+            var 聯絡人 = db.客戶聯絡人.Include(客 => 客.客戶資料).Where(p => p.是否已刪除 == false).ToList();
+
+            聯絡人 = 聯絡人.Where(p => p.客戶Id == 客戶Id).Where(p => p.Email == email).ToList();
+
+            if (聯絡人.Count() > 0)
+            {
+                int 聯絡人id = 聯絡人[0].Id;
+                if (聯絡人id != id)
+                    return true; //有重複的EMAIL
+                else
+                    return false;
+            }
+            else
+                return false;
+
+            
+            
+            
+        }        
     }
 }
