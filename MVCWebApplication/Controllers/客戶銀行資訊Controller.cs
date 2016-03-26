@@ -17,7 +17,7 @@ namespace MVCWebApplication.Controllers
         // GET: 客戶銀行資訊
         public ActionResult Index(string searchStr)
         {
-            var 客戶銀行資訊 = db.客戶銀行資訊.Include(客 => 客.客戶資料);
+            var 客戶銀行資訊 = db.客戶銀行資訊.Include(客 => 客.客戶資料).Where(p => p.是否已刪除 == false);
             //return View(客戶銀行資訊.ToList());
 
             //var data = db.客戶銀行資訊.AsQueryable();
@@ -123,7 +123,9 @@ namespace MVCWebApplication.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             客戶銀行資訊 客戶銀行資訊 = db.客戶銀行資訊.Find(id);
-            db.客戶銀行資訊.Remove(客戶銀行資訊);
+            //不要真的刪除，將欄位「是否已刪除」改為true
+            客戶銀行資訊.是否已刪除 = true;
+            //db.客戶銀行資訊.Remove(客戶銀行資訊);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

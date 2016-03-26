@@ -17,7 +17,7 @@ namespace MVCWebApplication.Controllers
         // GET: 客戶資料
         public ActionResult Index(string searchStr)
         {
-            var data = db.客戶資料.AsQueryable();
+            var data = db.客戶資料.AsQueryable().Where(p => p.是否已刪除 == false);
 
             if (!String.IsNullOrEmpty(searchStr))
             {
@@ -117,7 +117,21 @@ namespace MVCWebApplication.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             客戶資料 客戶資料 = db.客戶資料.Find(id);
-            db.客戶資料.Remove(客戶資料);
+            //不要真的刪除，將欄位「是否已刪除」改為true
+            客戶資料.是否已刪除 = true;
+
+            foreach (var 客戶聯絡人item in 客戶資料.客戶聯絡人.ToList())
+            {
+                //有FK的資料表，所以也要把對應FK的資料刪除掉
+                客戶聯絡人item.是否已刪除 = true;                
+            }
+            foreach (var 客戶銀行item in 客戶資料.客戶銀行資訊.ToList())
+            {
+                //有FK的資料表，所以也要把對應FK的資料刪除掉
+                客戶銀行item.是否已刪除 = true;
+            }
+
+            //db.客戶資料.Remove(客戶資料);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
