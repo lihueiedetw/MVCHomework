@@ -133,7 +133,7 @@ namespace MVCWebApplication.Controllers
 
         public ActionResult StaticsCustomerData()
         {
-            var data = db.客戶資料VIEW.ToList();
+            var data = db.客戶資料VIEW.OrderByDescending(p => p.客戶名稱).ToList();
             return View(data);
         }
     }
