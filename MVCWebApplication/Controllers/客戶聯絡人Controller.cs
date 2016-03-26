@@ -56,6 +56,8 @@ namespace MVCWebApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,客戶Id,職稱,姓名,Email,手機,電話")] 客戶聯絡人 客戶聯絡人)
         {
+            //同一個客戶的聯絡人EMAIL不可重複
+
             if (ModelState.IsValid)
             {
                 db.客戶聯絡人.Add(客戶聯絡人);
