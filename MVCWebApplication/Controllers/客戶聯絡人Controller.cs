@@ -21,8 +21,8 @@ namespace MVCWebApplication.Controllers
             //return View(客戶聯絡人.ToList());                       
 
             if (!String.IsNullOrEmpty(searchStr))
-            {
-                客戶聯絡人 = 客戶聯絡人.Where(p => p.姓名.Contains(searchStr));                
+            {                             
+                客戶聯絡人 = 客戶聯絡人.Where(p => p.姓名.Contains(searchStr) || p.職稱.Contains(searchStr));      
             }
             return View("Index", 客戶聯絡人);
         }

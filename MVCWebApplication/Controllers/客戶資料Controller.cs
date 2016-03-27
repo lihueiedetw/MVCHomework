@@ -20,8 +20,8 @@ namespace MVCWebApplication.Controllers
             var data = db.客戶資料.AsQueryable().Where(p => p.是否已刪除 == false);
 
             if (!String.IsNullOrEmpty(searchStr))
-            {
-                data = data.Where(p => p.客戶名稱.Contains(searchStr));
+            {                
+                data = data.Where(p => p.客戶名稱.Contains(searchStr) || p.統一編號.Contains(searchStr));
             }
             //return View(db.客戶資料.ToList());
             return View("Index", data);
