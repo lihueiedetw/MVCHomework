@@ -10,14 +10,15 @@ using MVCWebApplication.Models;
 
 namespace MVCWebApplication.Controllers
 {
-    public class 客戶資料Controller : Controller
+    public class 客戶資料Controller : BaseController
     {
-        private 客戶資料Entities db = new 客戶資料Entities();
+        //private 客戶資料Entities db = new 客戶資料Entities();
 
         // GET: 客戶資料
         public ActionResult Index(string searchStr)
         {
-            var data = db.客戶資料.AsQueryable().Where(p => p.是否已刪除 == false);
+            //var data = db.客戶資料.AsQueryable().Where(p => p.是否已刪除 == false);
+            var data = repo客戶資料.All();  //只顯示未刪除的
 
             if (!String.IsNullOrEmpty(searchStr))
             {                
@@ -34,7 +35,8 @@ namespace MVCWebApplication.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
+            //客戶資料 客戶資料 = db.客戶資料.Find(id);
+            客戶資料 客戶資料 = repo客戶資料.Find(id.Value);
             if (客戶資料 == null)
             {
                 return HttpNotFound();
@@ -57,8 +59,11 @@ namespace MVCWebApplication.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.客戶資料.Add(客戶資料);
-                db.SaveChanges();
+                //db.客戶資料.Add(客戶資料);
+                //db.SaveChanges();
+                repo客戶資料.Add(客戶資料);
+                repo客戶資料.UnitOfWork.Commit();
+
                 return RedirectToAction("Index");
             }
 
@@ -72,7 +77,8 @@ namespace MVCWebApplication.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
+            //客戶資料 客戶資料 = db.客戶資料.Find(id);
+            客戶資料 客戶資料 = repo客戶資料.Find(id.Value);
             if (客戶資料 == null)
             {
                 return HttpNotFound();
@@ -89,8 +95,14 @@ namespace MVCWebApplication.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(客戶資料).State = EntityState.Modified;
-                db.SaveChanges();
+                //db.Entry(客戶資料).State = EntityState.Modified;
+                //db.SaveChanges();
+
+                repo客戶資料.UnitOfWork.Context.Entry(客戶資料).State = EntityState.Modified;
+                repo客戶資料.UnitOfWork.Commit();
+
+                TempData["EditProductsSuccessMsg"] = 客戶資料.客戶名稱 + "修改成功";
+
                 return RedirectToAction("Index");
             }
             return View(客戶資料);
@@ -103,7 +115,8 @@ namespace MVCWebApplication.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
+            //客戶資料 客戶資料 = db.客戶資料.Find(id);
+            客戶資料 客戶資料 = repo客戶資料.Find(id.Value);
             if (客戶資料 == null)
             {
                 return HttpNotFound();
@@ -116,7 +129,8 @@ namespace MVCWebApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
+            //客戶資料 客戶資料 = db.客戶資料.Find(id);
+            客戶資料 客戶資料 = repo客戶資料.Find(id);
             //不要真的刪除，將欄位「是否已刪除」改為true
             客戶資料.是否已刪除 = true;
 
@@ -132,7 +146,8 @@ namespace MVCWebApplication.Controllers
             }
 
             //db.客戶資料.Remove(客戶資料);
-            db.SaveChanges();
+            //db.SaveChanges();
+            repo客戶資料.UnitOfWork.Commit();
             return RedirectToAction("Index");
         }
 
@@ -140,14 +155,16 @@ namespace MVCWebApplication.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                //db.Dispose();
+                repo客戶資料.UnitOfWork.Context.Dispose();
             }
             base.Dispose(disposing);
         }
 
         public ActionResult StaticsCustomerData()
         {
-            var data = db.客戶資料VIEW.OrderByDescending(p => p.客戶名稱).ToList();
+            //var data = db.客戶資料VIEW.OrderByDescending(p => p.客戶名稱).ToList();            
+            var data = repo客戶資料View.All().OrderByDescending(p => p.客戶名稱).ToList();
             return View(data);
         }
     }
