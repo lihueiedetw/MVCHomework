@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MVCWebApplication.Models;
+using PagedList;
 
 namespace MVCWebApplication.Controllers
 {
@@ -15,17 +16,40 @@ namespace MVCWebApplication.Controllers
         //private 客戶資料Entities db = new 客戶資料Entities();
 
         // GET: 客戶資料
-        public ActionResult Index(string searchStr)
+        public ActionResult Index(string searchStr, string cusCategory, int page=1)
         {
             //var data = db.客戶資料.AsQueryable().Where(p => p.是否已刪除 == false);
-            var data = repo客戶資料.All();  //只顯示未刪除的
+            var data = repo客戶資料.All();  //只顯示未刪除的            
+
+            //老師上課介紹的作法
+            var 客戶分類List = data.Select(p => p.客戶分類).Distinct().OrderBy(p => p).ToList();
+            ViewBag.cusCategory = new SelectList(data.Select(p => p.客戶分類).Distinct());
+
+            //SelectList selectList = new SelectList(data.Select(p => p.客戶分類).Distinct());            
+            //ViewBag.CategorySelectList = selectList;
+            
+            if (!String.IsNullOrEmpty(cusCategory))
+            {
+                data = data.Where(p => p.客戶分類 == cusCategory);
+            }
 
             if (!String.IsNullOrEmpty(searchStr))
             {                
                 data = data.Where(p => p.客戶名稱.Contains(searchStr) || p.統一編號.Contains(searchStr));
             }
             //return View(db.客戶資料.ToList());
-            return View("Index", data);
+            //return View("Index", data);
+
+            //當實際的資料頁數小於前一次的頁數時，要以實際的資料頁數為主            
+            int realPage = (data.Count() / 10 )+ 1;            
+            //ViewBag.realPage = realPage;
+            //ViewBag.Page = page;
+
+            if (page > realPage)
+                page = realPage;
+
+            var 客戶分類data = data.OrderBy(p => p.客戶名稱).ToPagedList(page, 10);            
+            return View("Index", 客戶分類data);
         }
 
         // GET: 客戶資料/Details/5
@@ -55,7 +79,7 @@ namespace MVCWebApplication.Controllers
         // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email")] 客戶資料 客戶資料)
+        public ActionResult Create([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email,客戶分類")] 客戶資料 客戶資料)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +115,7 @@ namespace MVCWebApplication.Controllers
         // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email")] 客戶資料 客戶資料)
+        public ActionResult Edit([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email,客戶分類")] 客戶資料 客戶資料)
         {
             if (ModelState.IsValid)
             {
@@ -167,5 +191,6 @@ namespace MVCWebApplication.Controllers
             var data = repo客戶資料View.All().OrderByDescending(p => p.客戶名稱).ToList();
             return View(data);
         }
+               
     }
 }
